@@ -5,17 +5,46 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const app = express();
-app.use(cors());
+
+const ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'http://localhost:5500',
+    'https://suiviepargne.netlify.app'
+];
+
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || ALLOWED_ORIGINS.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Interdit par CORS'));
+        }
+    },
+    credentials: true
+}));
+
 app.use(express.json());
 
 const path = require('path');
 const bcrypt = require('bcryptjs');
 
-// Serveur de fichiers statiques unifié (Le Studio est à la racine, le Client dans /suivi)
-app.use(express.static(path.join(__dirname, '../frontend')));
+// Serveur de fichiers statiques (Optionnel pour le déploiement Cloud séparé)
+const frontendPath = path.join(__dirname, '../frontend');
+const fs = require('fs');
 
-// Redirection par défaut vers le Studio (qui est maintenant à la racine du frontend)
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, '../frontend/index.html')));
+if (fs.existsSync(frontendPath)) {
+    app.use(express.static(frontendPath));
+    app.get('/', (req, res) => res.sendFile(path.join(frontendPath, 'index.html')));
+} else {
+    // Mode API pure (Render/Cloud)
+    app.get('/', (req, res) => {
+        res.json({
+            status: "online",
+            message: "Épargne Pro API active",
+            production: true
+        });
+    });
+}
 
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/epargne_pro_saas';
