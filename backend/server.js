@@ -14,22 +14,6 @@ app.use(express.json());
 // Service des fichiers statiques du Frontend (Dossier intégré)
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/api', (req, res) => {
-    res.json({
-        message: 'Épargne Pro API active',
-        status: 'online',
-        version: '1.2.0'
-    });
-});
-
-// Toutes les autres routes GET renvoient vers l'index.html du frontend (pour le SPA)
-app.get('*', (req, res) => {
-    // Si c'est une requête API qui n'existe pas, on laisse l'erreur 404 normale
-    if (req.path.startsWith('/api/')) return res.status(404).json({ error: 'Route API non trouvée' });
-
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/epargne_pro_saas';
 const MASTER_PIN = process.env.MASTER_PIN || '8888';
@@ -781,6 +765,23 @@ app.post('/api/auth/update-profile', async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
+});
+
+app.get('/api', (req, res) => {
+    res.json({
+        message: 'Épargne Pro API active',
+        status: 'online',
+        version: '1.2.0'
+    });
+});
+
+// Toutes les autres routes GET renvoient vers l'index.html du frontend (pour le SPA)
+app.get('*', (req, res) => {
+    // Si c'est une requête API qui n'existe pas, une erreur 404 est déjà renvoyée par le défaut d'Express
+    // On ne sert l'index.html que pour les routes non-API
+    if (req.path.startsWith('/api/')) return res.status(404).json({ error: 'Route API non trouvée' });
+
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // --- DÉMARRAGE ---
