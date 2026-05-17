@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suivi d'Épargne</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- DEBUG ALERT FOR MOBILE -->
+    <div id="mobile-debug-alert" style="display:none; position:fixed; top:0; left:0; width:100%; background:red; color:white; padding:10px; z-index:9999; font-size:12px; word-break:break-all;"></div>
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen" class="login-screen-overlay">
+        <div class="login-glass-card">
+            <svg class="login-logo-anim" width="48" height="48" viewBox="0 0 32 32" fill="none">
+                <circle cx="12" cy="16" r="8" fill="var(--brand)" />
+                <circle cx="20" cy="16" r="8" stroke="var(--brand)" stroke-width="3" />
+            </svg>
+            <h1 id="login-project-title">Projet...</h1>
+            <p class="login-subtitle">Choisissez votre profil pour continuer</p>
+
+            <div class="login-container-wrapper">
+                <div id="login-members-list" class="login-grid">
+                    <!-- Buttons injected via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP (Hidden initially) -->
+    <div id="main-app" style="display:none;">
+        <header class="app-header">
+            <div class="container top-bar">
+                <div class="logo">
+                    <svg class="logo-icon" width="28" height="28" viewBox="0 0 32 32" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="16" r="8" fill="var(--brand)" />
+                        <circle cx="20" cy="16" r="8" stroke="var(--brand)" stroke-width="3" />
+                    </svg>
+                    <strong id="app-title">Suivi d'Épargne</strong>
+                    <span id="current-user-badge"></span>
+                </div>
+                <nav class="main-tabs">
+                    <button class="tab-btn active" data-tab="defi" onclick="switchTab('defi')">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                            </path>
+                        </svg>
+                        <span>Le Défi</span>
+                    </button>
+                    <button class="tab-btn" data-tab="historique" onclick="switchTab('historique')">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>Journal</span>
+                    </button>
+                    <button class="tab-btn" data-tab="payments" onclick="switchTab('payments')">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z">
+                            </path>
+                        </svg>
+                        <span>Verser</span>
+                    </button>
+                    <button class="tab-btn" data-tab="stats" onclick="switchTab('stats')">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                            </path>
+                        </svg>
+                        <span>Stats</span>
+                    </button>
+                </nav>
+                <div class="header-actions">
+
+                    <button class="btn btn-ghost" onclick="openSettings()" title="Paramètres">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+                            </path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                    </button>
+                    <button class="btn btn-ghost" id="theme-toggle" onclick="toggleTheme()" title="Changer de thème">
+                        <svg id="theme-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20"
+                            height="20">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M15 12a3 3 0 11-6 0 3 3 0 016 0z">
+                            </path>
+                        </svg>
+                    </button>
+                    <button id="reset-btn" class="btn btn-ghost">Réinitialiser</button>
+                </div>
+            </div>
+        </header>
+
+        <section class="hero-stats">
+            <div class="container">
+                <div class="stat-card-row">
+                    <div class="stat-box">
+                        <span class="stat-label">Total Épargné</span>
+                        <div class="stat-main">
+                            <span class="stat-value" id="total-saved">0</span>
+                            <span class="stat-unit">FCFA</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-box">
+                        <span class="stat-label">Prochain Dépôt</span>
+                        <div class="stat-main">
+                            <span class="stat-value" id="next-deposit">100</span>
+                            <span class="stat-unit">FCFA</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-box">
+                        <div class="progress-meta">
+                            <span class="stat-label">Progression</span>
+                            <span id="progress-percent" style="font-weight:800; color:var(--brand)">0%</span>
+                        </div>
+                        <div class="progress-bar-bg" style="margin-top:10px;">
+                            <div class="progress-bar-fill" id="progress-bar-fill"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <main class="app-content">
+            <div class="container">
+                <!-- DEFI TAB -->
+                <div id="tab-defi" class="tab-content active">
+                    <div class="section-header">
+                        <h2>Calendrier Hebdomadaire</h2>
+                    </div>
+                    <div id="months-grid" class="months-grid">
+                        <!-- Dynamic Months -->
+                    </div>
+                </div>
+
+                <!-- HISTORIQUE TAB -->
+                <div id="tab-historique" class="tab-content">
+                    <div class="section-header">
+                        <h2>Journal de Bord</h2>
+                        <div class="filter-group">
+                            <button class="filter-btn active" onclick="filterHistory('all')">Tous</button>
+                            <button class="filter-btn" onclick="filterHistory('done')">Validés</button>
+                            <button class="filter-btn" onclick="filterHistory('pending')">À venir</button>
+                        </div>
+                    </div>
+                    <div id="history-list" class="history-list">
+                        <!-- Activity Cards injected via JS -->
+                    </div>
+                </div>
+
+                <!-- TAB STATS -->
+                <div id="tab-stats" class="tab-content">
+                    <!-- Group stats injected by JS -->
+                </div>
+
+                <!-- TAB PAYMENTS -->
+                <div id="tab-payments" class="tab-content">
+                    <div class="section-header">
+                        <h2>Nouveau Versement</h2>
+                    </div>
+                    <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.5rem;">Sélectionnez les
+                        semaines que vous souhaitez régler via Wave.</p>
+
+                    <div id="checkout-list" class="weeks-selection-grid">
+                        <!-- Checkboxes injected via JS -->
+                    </div>
+
+                    <div class="checkout-footer-card">
+                        <div style="flex:1">
+                            <div class="stat-label">Total Sélectionné</div>
+                            <div id="checkout-total" class="stat-value" style="color:var(--brand)">0 F</div>
+                        </div>
+                        <button id="btn-pay-wave" class="btn btn-primary" onclick="initiateWavePayment()" disabled>
+                            Payer via Wave
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="container"
+            style="padding: 2rem 0; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid var(--border);">
+            <div style="display: flex; justify-content: space-between;">
+                <p>© 2026 Suivi d'Épargne</p>
+                <p><span id="footer-label">Reste à économiser</span> : <strong id="remaining-amount">143 100</strong>
+                    FCFA</p>
+            </div>
+        </footer>
+
+    </div> <!-- Fin Main App -->
+
+    <!-- Pin Dialog / Override -->
+    <div id="dialog-overlay" class="dialog-overlay">
+        <div class="dialog-box">
+            <h4 id="dialog-title">Sécurité</h4>
+            <p id="dialog-msg">Veuillez entrer votre Code PIN à 4 chiffres.</p>
+            <input type="password" id="dialog-input" maxlength="4" style="letter-spacing:8px;" />
+            <div class="dialog-buttons">
+                <button id="dialog-btn-cancel" class="dialog-btn cancel">Annuler</button>
+                <button id="dialog-btn-ok" class="dialog-btn ok">Valider</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SETTINGS MODAL -->
+    <div id="settings-overlay" class="dialog-overlay">
+        <div class="dialog-box" style="width: 380px;">
+            <h4>Mon Profil</h4>
+            <p>Personnalisez votre apparence sur la plateforme.</p>
+
+            <div style="padding: 0 1.5rem 1.5rem; text-align: left;">
+                <label class="stat-label" style="margin-bottom: 8px;">Votre Nom</label>
+                <input type="text" id="settings-name" class="btn-outline"
+                    style="width: 100%; padding: 0.8rem; border-radius: 12px; margin-bottom: 1.5rem; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border);" />
+
+                <label class="stat-label" style="margin-bottom: 8px;">Couleur de Profil</label>
+                <div id="color-palette" style="display: flex; gap: 10px; justify-content: center; margin-bottom: 1rem;">
+                    <!-- Colors injected via JS -->
+                </div>
+            </div>
+
+            <div class="dialog-buttons">
+                <button onclick="closeSettings()" class="dialog-btn cancel">Fermer</button>
+                <button onclick="saveProfile()" class="dialog-btn ok">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VICTORY OVERLAY -->
+    <div id="victory-overlay">
+        <div class="victory-card">
+            <div class="trophy-icon" style="font-size: 64px; margin-bottom: 1rem;">🏆</div>
+            <h2 class="victory-title">Défit Relevé !</h2>
+            <p class="victory-subtitle">Félicitations ! Vous avez complété les 52 semaines d'épargne. Vous êtes un
+                véritable champion de la discipline.</p>
+            <button onclick="closeVictory()" class="btn btn-primary"
+                style="padding: 1rem 2rem; border-radius: 100px; font-weight: 800;">CONTINUER</button>
+        </div>
+    </div>
+
+    <!-- CONFETTI CANVAS -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

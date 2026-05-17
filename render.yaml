@@ -1,13 +1,12 @@
 services:
-  # Service Unique (Frontend + Backend)
+  # Service Unique Intégré (Backend + Public Frontend)
   - type: web
-    name: epargne-pro-saas
+    name: epargne-pro-integrated
     env: node
     plan: free
-    # On déploie depuis la racine pour que le backend voit le dossier frontend
-    rootDir: . 
-    buildCommand: "cd backend && npm install"
-    startCommand: "cd backend && node server.js"
+    rootDir: backend
+    buildCommand: "npm install"
+    startCommand: "node server.js"
     envVars:
       - key: MONGODB_URI
         sync: false

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Épargne Pro | Super Studio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- LOGIN OVERLAY -->
+    <div id="login-overlay" class="login-overlay">
+        <div class="login-card">
+            <div class="login-logo">
+                <svg width="40" height="40" viewBox="0 0 32 32" fill="none">
+                    <circle cx="12" cy="16" r="8" fill="var(--brand)" />
+                    <circle cx="20" cy="16" r="8" stroke="var(--brand)" stroke-width="3" />
+                </svg>
+            </div>
+            <h2>Connexion Studio</h2>
+            <p class="login-subtitle">Entrez le mot de passe Administrateur</p>
+
+            <div class="login-form-group">
+                <input type="password" id="admin-pass" placeholder="Mot de passe secret">
+                <button class="btn btn-primary login-btn" onclick="handleLogin()">Accéder au Studio</button>
+            </div>
+
+            <p id="login-error" class="login-error">Mot de passe incorrect.</p>
+        </div>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <div class="studio-app">
+        <!-- SIDEBAR -->
+        <aside class="studio-sidebar" id="studio-sidebar">
+            <div class="logo-group">
+                <div class="logo-icon">
+                    <svg fill="white" viewBox="0 0 24 24" width="24" height="24">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.62-.96-2.67-2.38-3.01V5h-2.55v1.65c-1.49.32-2.7 1.3-2.7 2.81 0 1.79 1.49 2.69 3.66 3.21 1.98.49 2.19 1.25 2.19 2.04 0 .61-.39 1.46-2.18 1.46-1.61 0-2.22-.73-2.3-1.66H7.13c.09 1.79 1.14 2.76 2.63 3.09V20h2.55v-1.67c1.6-.3 2.73-1.28 2.73-2.81 0-2.07-1.76-2.78-3.74-3.28z" />
+                    </svg>
+                </div>
+                <strong>Studio Admin</strong>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#" class="active" onclick="filterType('all')">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
+                        </path>
+                    </svg>
+                    Tous les projets
+                </a>
+                <a href="#" onclick="filterType('solo')">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    Épargnes Solo
+                </a>
+                <a href="#" onclick="filterType('groupe')">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
+                        </path>
+                    </svg>
+                    Cagnottes Groupe
+                </a>
+                <a href="#" onclick="showSection('validation')">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Validations
+                    <span id="pending-badge" class="count-badge" style="display:none;">0</span>
+                </a>
+                <a href="#" onclick="showSection('audit')">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Historique
+                </a>
+            </nav>
+
+            <div class="sidebar-footer" style="display:flex; flex-direction:column; gap:8px; padding-bottom: 2rem;">
+                <button class="btn btn-ghost" onclick="openPasswordModal()"
+                    style="color:var(--text-muted); font-size:0.8rem; border:1px solid var(--border)">Changer
+                    Pass</button>
+                <button class="btn btn-logout" onclick="handleLogout()">Déconnexion</button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="studio-main">
+            <!-- Header Fixe -->
+            <header class="main-header">
+                <!-- NEW: Integrated Header Navigation (Mobile Only) -->
+                <div class="mobile-only" style="width:100%; flex-direction:column; gap:12px;">
+                    <nav class="mobile-nav-tabs">
+                        <button class="m-tab active" onclick="filterType('all'); updateMTab(this)" title="Projets">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                            </svg>
+                            <span>Projets</span>
+                        </button>
+                        <button class="m-tab" onclick="showSection('validation'); updateMTab(this)" title="Validations">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>Valid.</span>
+                            <span class="tab-badge" id="header-pending-badge" style="display:none;">0</span>
+                        </button>
+                        <button class="m-tab" onclick="showSection('audit'); updateMTab(this)" title="Historique">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>Hist.</span>
+                        </button>
+                        <button class="m-tab" id="header-theme-toggle" onclick="toggleStudioTheme()" title="Thème">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                                <path id="mobile-theme-icon"
+                                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <span>Thème</span>
+                        </button>
+                        <button class="m-tab" onclick="openMobileSettings()" title="Réglages">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span>Réglages</span>
+                        </button>
+                    </nav>
+
+                    <div class="mobile-utility-bar">
+                        <div class="m-search-fusion">
+                            <svg width="18" height="18" fill="none" stroke="currentColor">
+                                <path d="M21 21l-6-6M9 16a7 7 0 100-14 7 7 0 000 14z" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <input type="text" id="mobile-project-search" placeholder="Recherche..."
+                                oninput="handleSearch(true)">
+                        </div>
+                        <button class="m-action-btn" onclick="openCreateModal()" title="Nouveau Projet">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4v16m8-8H4" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="stats-overview" class="dashboard-overview">
+                    <div class="overview-card">
+                        <span class="label">Total Plateforme</span>
+                        <span id="global-saved" class="val">--</span>
+                    </div>
+                    <div class="overview-card">
+                        <span class="label">Projets</span>
+                        <span id="global-projects" class="val">--</span>
+                    </div>
+                    <div class="overview-card">
+                        <span class="label">Membres</span>
+                        <span id="global-members" class="val">--</span>
+                    </div>
+                </div>
+
+                <div class="header-actions-row desktop-only">
+                    <div class="search-bar">
+                        <svg width="20" height="20" fill="none" stroke="currentColor">
+                            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <input type="text" id="project-search" placeholder="Rechercher un projet..."
+                            oninput="handleSearch()">
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn btn-ghost" onclick="toggleStudioTheme()" id="theme-toggle" title="Thème"
+                            style="padding:0.6rem; border:1px solid var(--border);">
+                            <svg id="theme-icon" width="20" height="20" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path
+                                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                        <button class="btn btn-primary" onclick="openCreateModal()">+ Nouveau Projet</button>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-scroll">
+                <section class="projects-grid" id="projects-container">
+                    <!-- Cards here -->
+                </section>
+
+                <section id="validation-section" style="display:none;">
+                    <div class="section-header" style="margin-bottom:20px;">
+                        <h2>Validations en Attente</h2>
+                        <p style="color:var(--text-muted); font-size:0.9rem;">Confirmez les paiements reçus via Wave
+                            pour débloquer les cases.</p>
+                    </div>
+                    <div id="pending-list" class="pending-approval-grid">
+                        <!-- Pending requests items here -->
+                    </div>
+                </section>
+
+                <section id="audit-section" style="display:none;">
+                    <div class="section-header" style="margin-bottom:20px;">
+                        <h2>Historique des Opérations</h2>
+                        <p style="color:var(--text-muted); font-size:0.9rem;">Traces des validations et annulations
+                            récentes.</p>
+                    </div>
+                    <div id="audit-list" style="display:flex; flex-direction:column; gap:12px;">
+                        <!-- Audit items here -->
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal: Create Project -->
+    <div class="modal-overlay" id="create-modal">
+        <div class="modal-card">
+            <h2 id="modal-title" style="margin-bottom:1rem;">Nouveau Projet</h2>
+            <form id="create-form" onsubmit="handleCreate(event)">
+                <!-- Section: Identité -->
+                <div class="form-section">
+                    <h3 class="section-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="3" style="margin-right:6px;">
+                            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg> Identité</h3>
+                    <div class="form-group">
+                        <label>Nom du Projet</label>
+                        <div class="input-with-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                                <polyline points="9 22 9 12 15 12 15 22" />
+                            </svg>
+                            <input type="text" id="p-name" placeholder="Ex: Voyage Dubaï 2026" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Lien d'Accès</label>
+                        <div class="input-with-icon prefix-wrap">
+                            <span class="input-prefix">epargne.com/</span>
+                            <input type="text" id="p-slug" placeholder="slug-unique" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Configuration -->
+                <div class="form-section">
+                    <h3 class="section-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="3" style="margin-right:6px;">
+                            <path
+                                d="M12 15V3m0 12l-4-4m4 4l4-4M2 17l.621 2.485A2 2 0 004.561 21h14.878a2 2 0 001.94-1.515L22 17" />
+                        </svg> Configuration</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Méthode</label>
+                            <select id="p-saving-mode" onchange="handleModeChange()">
+                                <option value="progressive">Épargne Progressive</option>
+                                <option value="fixed_constant">Épargne Constante</option>
+                                <option value="target_objective">Épargne Objective</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="group-type-container">
+                            <label>Type</label>
+                            <select id="p-type">
+                                <option value="solo">Solo (Individuel)</option>
+                                <option value="groupe">Groupe (Tontine)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Finances -->
+                <div class="form-section" id="finance-section">
+                    <h3 class="section-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="3" style="margin-right:6px;">
+                            <rect x="2" y="5" width="20" height="14" rx="2" />
+                            <line x1="2" y1="10" x2="22" y2="10" />
+                        </svg> Finances</h3>
+                    <div class="form-row" id="finance-row">
+                        <div class="form-group" id="base-amount-group">
+                            <label>Apport / sem (FR)</label>
+                            <input type="number" id="p-base-amount" value="500">
+                        </div>
+                        <div class="form-group" id="target-amount-group" style="display:none;">
+                            <label>Objectif Final (FR)</label>
+                            <input type="number" id="p-target-amount" value="1000000">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Calendrier -->
+                <div class="form-section">
+                    <h3 class="section-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="3" style="margin-right:6px;">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                            <line x1="16" y1="2" x2="16" y2="6" />
+                            <line x1="8" y1="2" x2="8" y2="6" />
+                            <line x1="3" y1="10" x2="21" y2="10" />
+                        </svg> Calendrier</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Début</label>
+                            <input type="date" id="p-start-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Fin</label>
+                            <input type="date" id="p-end-date" required>
+                        </div>
+                    </div>
+                    <div class="frequency-box" id="frequency-row" style="display:none;">
+                        <div class="form-row" style="margin-bottom:0;">
+                            <div class="form-group">
+                                <label>Périodicité</label>
+                                <select id="p-billing-cycle" onchange="handleCycleChange()">
+                                    <option value="weekly">Hebdomadaire</option>
+                                    <option value="monthly">Mensuel</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="billing-day-weekly-group">
+                                <label>Jour</label>
+                                <select id="p-billing-day-weekly">
+                                    <option value="1">Lundi</option>
+                                    <option value="2">Mardi</option>
+                                    <option value="3">Mercredi</option>
+                                    <option value="4" selected>Jeudi</option>
+                                    <option value="5">Vendredi</option>
+                                    <option value="6">Samedi</option>
+                                    <option value="7">Dimanche</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="billing-day-monthly-group" style="display:none;">
+                                <label>Quantième du mois</label>
+                                <input type="number" id="p-billing-day-monthly" value="5" min="1" max="28">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Membres -->
+                <div class="form-section" style="border-bottom:none;">
+                    <h3 class="section-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="3" style="margin-right:6px;">
+                            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                            <path d="M16 3.13a4 4 0 010 7.75" />
+                        </svg> Membres</h3>
+                    <div class="form-group">
+                        <textarea id="p-members" placeholder="Marc, Sophie, Eric" rows="2" required></textarea>
+                        <p style="font-size:0.75rem; color:var(--text-muted); margin-top:6px;">Chaque membre aura "0000"
+                            comme PIN initial.</p>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-ghost" onclick="closeCreateModal()">Annuler</button>
+                    <button type="submit" class="btn btn-primary" id="submit-btn">Générer le projet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Success Share -->
+    <div class="modal-overlay" id="success-modal">
+        <div class="modal-card" style="text-align: center;">
+            <div
+                style="width:48px; height:48px; background:var(--success-bg); color:var(--success); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h2>Projet Créé avec Succès !</h2>
+            <p>Voici le lien privé à envoyer aux membres :</p>
+            <div style="background:#f2f4f7; padding:12px; border-radius:6px; margin:1rem 0; font-family:monospace; font-weight:600; color:#111; user-select:all;"
+                id="share-link">
+                epargnepro.com/lien
+            </div>
+            <button class="btn btn-primary" style="width:100%" onclick="window.location.reload()">Terminer</button>
+        </div>
+    </div>
+
+    <!-- Clean Small Dialog Overlay -->
+    <div id="dialog-overlay" class="dialog-overlay">
+        <div class="dialog-box">
+            <h4 id="dialog-title">Studio Admin</h4>
+            <p id="dialog-msg"></p>
+            <input type="text" id="dialog-input" style="display:none;" />
+            <div class="dialog-buttons">
+                <button id="dialog-btn-cancel" class="dialog-btn cancel">Annuler</button>
+                <button id="dialog-btn-ok" class="dialog-btn ok">Valider</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Change Admin Password -->
+    <div class="modal-overlay" id="password-modal">
+        <div class="modal-card">
+            <h2>Sécurité Studio</h2>
+            <p>Définissez un nouveau mot de passe administrateur.</p>
+            <form onsubmit="handleUpdatePassword(event)" style="margin-top:1.5rem;">
+                <div class="form-group">
+                    <label>Nouveau Mot de Passe</label>
+                    <input type="password" id="new-admin-pass" placeholder="Minimum 4 caractères" required
+                        style="width:100%; padding:0.8rem; border-radius:8px; border:1px solid var(--border); background:var(--bg-app); color:var(--text-main);">
+                </div>
+                <div class="modal-actions" style="margin-top:1.5rem;">
+                    <button type="button" class="btn btn-ghost" onclick="closePasswordModal()">Annuler</button>
+                    <button type="submit" class="btn btn-primary" id="pass-submit-btn">Sauvegarder</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Mobile Settings Modal -->
+    <div class="modal-overlay" id="mobile-settings-modal" onclick="if(event.target===this) closeMobileSettings()">
+        <div class="modal-card" style="padding: 1.5rem; text-align: left; padding-bottom: calc(1.5rem + 70px);">
+            <h2 style="font-size: 1.25rem; margin-bottom: 0.5rem; color:var(--text-main);">Paramètres Admin</h2>
+            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom: 1.25rem;">Gérez la sécurité et
+                l'apparence du Studio.</p>
+
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <button class="btn btn-ghost"
+                    style="justify-content: flex-start; text-align: left; border:1px solid var(--border); padding: 14px 16px; border-radius:12px;"
+                    onclick="closeMobileSettings(); openPasswordModal()">
+                    <svg fill="none" stroke="currentColor" width="20" height="20" viewBox="0 0 24 24"
+                        style="margin-right:10px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    Sécurité & Mot de Passe
+                </button>
+                <button class="btn"
+                    style="justify-content: flex-start; text-align: left; background: rgba(239, 68, 68, 0.1); color: #ef4444; border:none; padding: 14px 16px; border-radius:12px; font-weight:700;"
+                    onclick="handleLogout()">
+                    <svg fill="none" stroke="currentColor" width="20" height="20" viewBox="0 0 24 24"
+                        style="margin-right:10px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    Déconnexion du Studio
+                </button>
+            </div>
+            <button class="btn btn-ghost" style="width: 100%; margin-top: 1.5rem; border:none;"
+                onclick="closeMobileSettings()">Fermer</button>
+        </div>
+    </div>
+
+    <script>
+        function openMobileSettings() { document.getElementById('mobile-settings-modal').classList.add('active'); }
+        function closeMobileSettings() { document.getElementById('mobile-settings-modal').classList.remove('active'); }
+    </script>
+    <script src="script.js"></script>
+</body>
+
+</html>

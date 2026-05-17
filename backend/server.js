@@ -11,8 +11,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Service des fichiers statiques du Frontend
-app.use(express.static(path.join(__dirname, '../frontend')));
+// Service des fichiers statiques du Frontend (Dossier intégré)
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/api', (req, res) => {
     res.json({
@@ -27,7 +27,7 @@ app.get('*', (req, res) => {
     // Si c'est une requête API qui n'existe pas, on laisse l'erreur 404 normale
     if (req.path.startsWith('/api/')) return res.status(404).json({ error: 'Route API non trouvée' });
 
-    res.sendFile(path.join(__dirname, '../frontend', 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 
